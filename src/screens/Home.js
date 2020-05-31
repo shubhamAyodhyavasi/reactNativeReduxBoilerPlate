@@ -8,16 +8,16 @@
 
 import 'react-native-gesture-handler';
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
 import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
   Text,
+  Button,
   StatusBar,
 } from 'react-native';
-
+import {connect} from 'react-redux';
 import {
   Header,
   LearnMoreLinks,
@@ -26,7 +26,9 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-const Home: () => React$Node = () => {
+import {setTest} from '../redux/actions';
+
+const Home = (props) => {
   return (
     // <NavigationContainer>
     // <StatusBar barStyle="dark-content" />
@@ -44,29 +46,20 @@ const Home: () => React$Node = () => {
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>Step One</Text>
             <Text style={styles.sectionDescription}>
-              Edit <Text style={styles.highlight}>App.js</Text> to change this
-              screen and then come back to see your edits.
+              test redux value is: <Text style={styles.highlight}>{props.testValue}</Text> 
             </Text>
+            <View>
+              <Button 
+                onPress={() => {
+                  const value = new Date().toJSON();
+                  props.setTest(value);
+                }}
+                title="Change Value"
+               >
+                <Text></Text>
+              </Button>
+            </View>
           </View>
-          <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>See Your Changes</Text>
-            <Text style={styles.sectionDescription}>
-              <ReloadInstructions />
-            </Text>
-          </View>
-          <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Debug</Text>
-            <Text style={styles.sectionDescription}>
-              <DebugInstructions />
-            </Text>
-          </View>
-          <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Learn More</Text>
-            <Text style={styles.sectionDescription}>
-              Read the docs to discover what to do next:
-            </Text>
-          </View>
-          <LearnMoreLinks />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -88,6 +81,7 @@ const styles = StyleSheet.create({
   sectionContainer: {
     marginTop: 32,
     paddingHorizontal: 24,
+    paddingBottom: 20,
   },
   sectionTitle: {
     fontSize: 24,
@@ -113,4 +107,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+const _mapStateToProps = (state) => ({
+  testValue: state.test.value,
+});
+
+const _mapDispatchToProps = {
+  setTest,
+};
+
+export default connect(_mapStateToProps, _mapDispatchToProps)(Home);
